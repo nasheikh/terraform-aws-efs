@@ -6,10 +6,12 @@ provider "aws" {
 }
 
 terraform {
-  required_version = ">= 0.12.6, < 1.2"
-
+  required_version = "~> 1.3.0"
   required_providers {
-    aws = ">= 2.68, < 4.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
   }
 }
 
@@ -65,6 +67,7 @@ module "efs" {
   subnet_ids             = module.vpc.private_subnets
   security_group_ingress = local.security_group_ingress
   lifecycle_policy       = [{ "transition_to_ia" = "AFTER_30_DAYS" }]
+  backup_policy_status   = "ENABLED"
   tags = {
     Terraform   = "true"
     Environment = "terratest"

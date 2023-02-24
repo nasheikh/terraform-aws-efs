@@ -69,7 +69,7 @@ variable "tags" {
 variable "encrypted" {
   description = "If true, the file system will be encrypted"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "kms_key_id" {
@@ -102,4 +102,14 @@ variable "provisioned_throughput_in_mibps" {
   description = "The throughput, measured in MiB/s, that you want to provision for the file system. Only applicable with throughput_mode set to provisioned."
   type        = string
   default     = null
+}
+
+variable "backup_policy_status" {
+  description = "Enable/disable backup for EFS Filesystem.  Value should be ENABLE/DISABLED.  Defaults to DISABLED"
+  type        = string
+  default     = "DISABLED"
+  validation {
+    condition     = var.backup_policy_status == "ENABLED" || var.backup_policy_status == "DISABLED"
+    error_message = "Sorry, value must be either 'ENABLED' or 'DISABLED'."
+  }
 }

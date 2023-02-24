@@ -35,6 +35,7 @@ resource "aws_security_group_rule" "this_egress" {
   for_each          = var.security_group_egress
   security_group_id = aws_security_group.this.id
   type              = "egress"
+  description       = lookup(each.value, "description", null)
   from_port         = lookup(each.value, "from_port", null)
   protocol          = lookup(each.value, "protocol", null)
   to_port           = lookup(each.value, "to_port", null)
@@ -77,4 +78,12 @@ resource "aws_efs_mount_target" "this" {
   security_groups = [
     aws_security_group.this.id
   ]
+}
+
+resource "aws_efs_backup_policy" "this" {
+  file_system_id = aws_efs_file_system.this.id
+
+  backup_policy {
+    status = var.backup_policy_status
+  }
 }
